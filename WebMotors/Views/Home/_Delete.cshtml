@@ -1,0 +1,31 @@
+﻿@model WebMotors.Teste.Entities.Car
+@{
+    ViewData["Title"] = "_Delete";
+}
+
+<!-- Modal -->
+<div id="deleteModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Tem certeza que deseja excluir @Model.Model?</h4>
+            </div>
+            <div class="modal-body">
+                <p>Esta ação não poderá ser desfeita.</p>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    </div>
+                    <div class="col-md-6">
+                        <a class="btn btn-success" style="color: white;" href="@Url.Action("Delete", "Home", new { id = Model.ID })" >Sim</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

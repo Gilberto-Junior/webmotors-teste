@@ -1,0 +1,106 @@
+﻿@model WebMotors.Teste.Entities.Car
+@{
+    ViewData["Title"] = "Include";
+}
+
+@*COMO O FRONT-END NÃO SERÁ LEVADO EM CONSIDERAÇÃO NA VALIAÇÃO, VALIDAÇÕES NÃO FORAM INCLUSAS.      :))*@
+
+<h4>Cadastre um carro novo</h4>
+
+<div class="col-md-6">
+    @using (Html.BeginForm("Save", "Home", FormMethod.Post))
+    {
+        @Html.HiddenFor(c => c.ID)
+        @Html.HiddenFor(c => c.Brand, new { id = "selectedBrand" })
+        @Html.HiddenFor(c => c.Model, new { id = "selectedModel" })
+
+        <div class="form-group">
+            <label for="brand">Marca:</label>
+            <select id="brand" class="form-control">
+                <option id="0">Selecione</option>
+                @foreach (var item in Model.Makes)
+                {
+                    <option id="@item.ID">@item.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="model">Modelo:</label>
+            <select id="model" class="form-control">
+                <option id="0">Selecione</option>
+                @foreach (var item in Model.Models)
+                {
+                    <option id="@item.ID">@item.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="model">Versão:</label>
+            @Html.TextBoxFor(c => c.Version, new { @class = "form-control", id = "version" })
+        </div>
+
+        <div class="form-group">
+            <label for="year">Ano:</label>
+            @Html.TextBoxFor(c => c.Year, new { @class = "form-control", id = "year", type = "number" })
+        </div>
+
+        <div class="form-group">
+            <label for="km">Quilometragem:</label>
+            @Html.TextBoxFor(c => c.Mileage, new { @class = "form-control", id = "km", type = "number" })
+        </div>
+
+        <div class="form-group">
+            <label for="note">Observações:</label>
+            @Html.TextAreaFor(c => c.Note, new { @class = "form-control", id = "note", type = "text" })
+        </div>
+
+        <button type="submit" class="btn btn-success">Salvar</button>
+    }
+</div>
+@section Scripts {
+    <script>
+        $(function () {
+
+            $("#brand").change(function () {
+                var brandId = $("#brand option:selected").attr("id");
+                if (brandId > 0) {
+                    $.ajax({
+                        url: "/Home/GetModels?id=" + brandId,
+                        success: function (result) {
+                            $('#model').html("<option id='0'>Selecione</option>")
+
+                            $.each(result, function (i, item) {
+                                var option = '<option id="' + item.id + '">' + item.name + '</option>';
+                                $('#model').append(option);
+                            });
+
+                            //Edição: Quando clica em editar na listagem, carrega o modelo já selecionado do carro
+                            if ($("#selectedModel").val() != "0" && $("#selectedModel").val() != 0) {
+                                $('#model').val($("#selectedModel").val()).change();
+                            }
+                        }
+                    });
+
+                    var brand = $("#brand option:selected").val();
+                    $("#selectedBrand").val(brand);
+                }
+            });
+
+            $("#model").change(function () {
+                var modelId = $("#model option:selected").attr("id");
+
+                if (modelId > 0) {
+                    var model = $("#model option:selected").val();
+                    $("#selectedModel").val(model);
+                }
+            });
+
+            //Edição: Quando clica em editar na listagem, carrega a marca já selecionada do carro
+            if ($("#selectedBrand").val() != "0" && $("#selectedBrand").val() != 0) {
+                $('#brand').val($("#selectedBrand").val()).change();
+            }
+        });
+    </script>
+}

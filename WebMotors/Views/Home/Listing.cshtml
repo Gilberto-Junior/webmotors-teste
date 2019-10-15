@@ -1,0 +1,64 @@
+﻿@model IEnumerable<WebMotors.Teste.Entities.Car>
+@{
+    ViewData["Title"] = "Listing";
+}
+
+<h4>Carros cadastrados</h4>
+
+<div class="table-responsive table-striped">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Marca</th>
+                <th scope="col">Modelo</th>
+                <th scope="col">Versão</th>
+                <th scope="col">Ano</th>
+                <th scope="col">Quilometragem</th>
+                <th scope="col">Observação</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th scope="row">@item.ID</th>
+                    <td scope="row">@item.Brand</td>
+                    <td scope="row">@item.Model</td>
+                    <td scope="row">@item.Version</td>
+                    <td scope="row">@item.Year</td>
+                    <td scope="row">@item.Mileage</td>
+                    <td scope="row">@item.Note</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Home", new { id = item.ID })">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a style="color: red;" href="#" onclick="removeCar(@item.ID)">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div id="modal"></div>
+
+@section Scripts {
+    <script>
+        function removeCar(id) {
+            $.ajax({
+                url: "/Home/_Delete?id=" + id,
+                success: function (result) {
+                    $("#modal").html(result);
+                    $("#deleteModal").modal();
+                }
+            });
+        }
+    </script>
+}
